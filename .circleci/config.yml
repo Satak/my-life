@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.2-stretch-browsers
+        environment:
+          FLASK_CONFIG: testing
+          DB_PATH: postgresql://ubuntu@localhost/circle_test?sslmode=disable
+    steps:
+      - checkout
+      - run: python test.py
