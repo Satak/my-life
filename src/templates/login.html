@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<form id="loginForm" action="{{ url_for('login_route') }}" method="post">
+    <div class="form-group">
+        <div class="form-group col-md-3">
+            <h4>Login</h4>
+            <label for="username">Username</label>
+            <input class="form-control" id="username" name="username">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-group col-md-3">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-group col-md-3">
+            <button type="submit" id="login" class="btn btn-primary">Login</button>
+        </div>
+    </div>
+</form>
+
+{% for message in get_flashed_messages() %}
+<div class="flash">{{ message }}</div>
+{% endfor %}
+
+<div><a href="{{url_for('register_route')}}" clas="link">Register a new user</a></div>
+{% endblock %}

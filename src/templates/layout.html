@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>My Life</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Life</a>
+        {% if not hide_logout %}
+        <a class="navbar-brand" href="/logout">Logout</a>
+        {% endif %}
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        function addFriend(friendId) {
+            $.ajax({
+                type: 'POST',
+                url: '/api/friend',
+                data: JSON.stringify ({"friendId": friendId}),
+                success: function(data) { location.reload(); },
+                contentType: "application/json",
+                dataType: 'json'
+            });
+        }
+        $( "#submit" ).click(function( event ) {
+            var happiness =  {
+                "happiness": $('#selector option:selected').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/api/happiness',
+                data: JSON.stringify (happiness),
+                success: function(data) { location.reload(); },
+                contentType: "application/json",
+                dataType: 'json'
+            });
+        });
+    </script>
+    <script>
+    $.getJSON( "/api/happiness", function( data ) {
+        var items = [];
+        $.each( data, function( key, val ) {
+            items.push( val );
+        });
+
+    // var items = [[1522596312000, 2], [1522596412000, 1], [1522596512000, 3]];
+    Highcharts.chart('graph', {
+
+    title: {
+        text: 'Happiness level'
+    },
+
+    yAxis: {
+        title: {
+            text: 'Level'
+        },
+        allowDecimals: false,
+        min: 1,
+        max: 10
+    },
+    xAxis: {
+        type: 'datetime'
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 2010
+        }
+    },
+    series: items,
+    credits: {
+      enabled: false
+    },
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+    });
+});
+</script>
+</body>
+</html>
